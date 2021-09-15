@@ -2,7 +2,9 @@ use mysql::*;
 use mysql::prelude::*;
 use eframe::{egui, epi};
 use crossclip::{Clipboard, SystemClipboard};
+
 mod font;
+use font::install_fonts;
 
 
 pub struct password{
@@ -28,7 +30,7 @@ impl epi::App for MyApp {
         _frame: &mut epi::Frame<'_>,
         _storage: Option<&dyn epi::Storage>,
     ) {
-        font::install_fonts(_ctx);
+        install_fonts(_ctx);
         let url = "mysql://root:123456@localhost:3306/passworddb";
         let opts = Opts::from_url(url).expect("mysql initialize Error!");
 
