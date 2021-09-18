@@ -5,6 +5,10 @@ use crossclip::{Clipboard, SystemClipboard};
 
 mod font;
 use font::install_fonts;
+use std::thread;
+use std::sync::mpsc;
+use std::sync::Arc;
+use std::cell::RefCell;
 
 
 pub struct password{
@@ -16,6 +20,7 @@ pub struct password{
 //遗留下一个问题，如何在password上实现From_Row接口
 pub struct MyApp {
     pub data: Vec<password>,
+    pub pasd: String,
 }
 
 //这里不需要实现new方法，data需要在setup方法中获取到，进而更新。
@@ -41,6 +46,8 @@ impl epi::App for MyApp {
             id,description,user,password
         }).expect("Query Failed");
         self.data = result;
+
+        
     }
 
     fn update(&mut self, ctx: &egui::CtxRef, frame: &mut epi::Frame<'_>) {
@@ -49,23 +56,39 @@ impl epi::App for MyApp {
                 ui.label("description");
                 ui.label("user");
                 ui.label("password");
+                ui.label("option");
                 ui.end_row();
                 
                 let mut vec_iter = self.data.iter();
-                loop {
-                    match vec_iter.next(){
-                        Some(password) => {
-                            ui.label(&password.description);
-                            ui.label(&password.user);
-                            if ui.add(egui::Button::new("copy password").frame(false)).clicked() {
-                                let pass_sec = (&password.password).clone();
-                                let clipboard =  SystemClipboard::new().unwrap();
-                                clipboard.set_string_contents(pass_sec).unwrap();
-                            };
-                            ui.end_row();
+                
+                
+                //和if let一脉相承
+                while let Some(password) = vec_iter.next(){
+                    let (tx,rx) = mpsc::channel();
+                    ui.label(&password.description);
+                    ui.label(&password.user);
+                    if ui.add(egui::Button::new("copy password").frame(false)).clicked() {
+                                        let pass_sec = (&password.password).clone();
+                                        let clipboard =  SystemClipboard::new().unwrap();
+                                        clipboard.set_string_contents(pass_sec).unwrap();
+                    };
+                                       
+                    if ui.add(egui::Button::new("show password").frame(false)).clicked(){
+
+                       
+                        let data = (&password.password).clone();
+                        tx.send(data).unwrap();
+                    };
+                    
+                    match rx.try_recv(){
+                        Ok(value) => {
+                            self.pasd = value;
                         },
-                        None => break,
-                    }
+                        Err(e) => println!("this a error"),
+                    };
+                    let content = self.pasd.clone();
+                    ui.label(content);    
+                    ui.end_row();
                 }
             });
 

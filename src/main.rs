@@ -19,7 +19,7 @@ fn main(){
     if op_num == 0 {
         add_password();
     }else if op_num == 1 {
-        let app = ui::MyApp{data : vec![]};
+        let app = ui::MyApp{data : vec![],pasd : String::new()};
         let native_options = eframe::NativeOptions::default();
         eframe::run_native(Box::new(app), native_options);
     }else{
