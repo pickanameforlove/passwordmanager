@@ -75,10 +75,12 @@ impl epi::App for MyApp {
                         let data = (&password.password).clone();
 
                         let pasd_clone = Arc::clone(&self.pasd);
-                        let change_value = thread::spawn(move || {
-                            let mut d = pasd_clone.lock().unwrap();
-                            *d = data;
-                        });
+                        // let change_value = thread::spawn(move || {
+                        //     let mut d = pasd_clone.lock().unwrap();
+                        //     *d = data;
+                        // });
+                        let mut d = pasd_clone.lock().unwrap();
+                        *d = data;
                         // tx.send(data).unwrap();
                     };
                     
