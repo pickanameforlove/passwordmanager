@@ -71,18 +71,27 @@ fn add_password(){
     let url = "mysql://root:123456@localhost:3306/passworddb";
     let opts = Opts::from_url(url).expect("mysql initialize Error!");
 
-    let pool = Pool::new(opts).unwrap();
+    let pool = match  Pool::new(opts){
+        Ok(p) => p,
+        Err(error) => panic!("Problem settting the pool: {:?}", error),
+    };
 
-    let mut conn = pool.get_conn().unwrap();
+    let mut conn = match pool.get_conn(){
+        Ok(c) => c,
+        Err(error) => panic!("Problem getting the connection: {:?}", error),
+    };
 
-    conn.exec_drop(
+    match conn.exec_drop(
         "INSERT INTO passwords (description, user, password)
          VALUES (:des, :u, :pass)", params! {
              "des" => &website,
              "u" => &username,
              "pass" => &pass,
          }
-    );
+    ) {
+        Ok(_) => (),
+        Err(error) => panic!("Problem execucing the statement: {:?}", error),
+    };
 
     let pass_sec = pass.clone();
     let clipboard =  SystemClipboard::new().unwrap();
