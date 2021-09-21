@@ -9,7 +9,7 @@
 /// password_ui(ui, &mut password);
 /// ```
 use eframe::egui;
-pub fn password_ui(ui: &mut egui::Ui, text: &mut String) -> egui::Response {
+pub fn password_ui(ui: &mut egui::Ui, text: &mut String, id_str : String) -> egui::Response {
     // This widget has its own state — show or hide password characters.
 
     // 1. Declare state struct
@@ -22,7 +22,7 @@ pub fn password_ui(ui: &mut egui::Ui, text: &mut String) -> egui::Response {
     struct State(bool);
 
     // 2. Create id
-    let id = ui.id().with("show_password");
+    let id = ui.id().with(id_str);
 
     // 3. Get state for this widget
     // You can read more about available `Memory` functions in the documentation of `egui::Memory`
@@ -66,8 +66,8 @@ pub fn password_ui(ui: &mut egui::Ui, text: &mut String) -> egui::Response {
 /// ``` ignore
 /// ui.add(password(&mut password));
 /// ```
-pub fn password(text: &mut String) -> impl egui::Widget + '_ {
-    move |ui: &mut egui::Ui| password_ui(ui, text)
+pub fn password(text: &mut String,id_str: String) -> impl egui::Widget + '_ {
+    move |ui: &mut egui::Ui| password_ui(ui, text,id_str)
 }
 
 pub fn url_to_file_source_code() -> String {

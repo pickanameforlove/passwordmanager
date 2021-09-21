@@ -5,7 +5,9 @@ use mysql::prelude::*;
 use eframe::{egui, epi};
 use std::sync::{Arc, Mutex};
 mod addPassword;
-mod ui;
+pub mod ui;
+use ui::list::list;
+use ui::dialog::dialog;
 
 fn main(){
     println!("what do you want to do ? 0 for adding password,1 for showing passwords");
@@ -19,7 +21,7 @@ fn main(){
     if op_num == 0 {
         add_password();
     }else if op_num == 1 {
-        let app = ui::MyApp{data : vec![],pasd : Arc::new(Mutex::new(String::new()))};
+        let app = ui::MyApp{data : vec![],w1:ui::list::list::default(),w2:ui::dialog::dialog::default()};
         let native_options = eframe::NativeOptions::default();
         eframe::run_native(Box::new(app), native_options);
     }else{
