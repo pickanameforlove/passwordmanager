@@ -1,21 +1,26 @@
 use eframe::egui::{containers::*, *};
 use super::list::password;
-#[derive(Default)]
+use crate::addPassword::insert_password;
+use crate::addPassword::gen_traditional_password;
+// #[derive(Default)]
 pub struct dialog{
     p:password,
+    open:bool,
 }
-// impl Default for dialog {
-//     fn default () -> dialog {
-//         dialog{p : password{id: 0, description: String::new(), user:String::new(),password:String::new()}}
-//     }
-// }
+impl Default for dialog {
+    fn default () -> dialog {
+        dialog{p : password{id: 0, description: String::new(), user:String::new(),password:String::new()},
+                open : true}
+    }
+}
 impl dialog {
     pub fn show(&mut self, ctx: &CtxRef){
-        let mut open = true;
+        let mut open = self.open;
+        // Window::new("adding password").open(&mut open).show(ctx,|ui| self.ui(ui));
         Window::new("adding password").open(&mut open).show(ctx,|ui| self.ui(ui));
     }
     fn ui(&mut self, ui: &mut Ui) {
-        let Self{p} = self;
+        let Self{p,open} = self;
         Frame::dark_canvas(ui.style()).show(ui,|ui|{
             ui.horizontal(|ui| {
                 ui.label("网站描述：");
@@ -28,9 +33,14 @@ impl dialog {
             ui.horizontal(|ui| {
                 ui.label("网站密码：");
                 ui.text_edit_singleline(&mut p.password);
+                if ui.button("generate").clicked(){
+                    p.password = gen_traditional_password(18);
+                }
             });
             if ui.button("submit").clicked(){
-                println!("d:{},u:{},p:{}",p.description,p.user,p.password);
+                // println!("d:{},u:{},p:{}",p.description,p.user,p.password);
+                insert_password(p);
+                *open = false;
             }
         });
     }

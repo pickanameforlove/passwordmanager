@@ -3,8 +3,6 @@ use eframe::{egui, epi};
 use crate::ui::dialog;
 use crate::ui::p;
 
-#[derive(Default)]
-pub struct list{}
 
 pub struct password{
     pub id: i32,
@@ -19,9 +17,19 @@ impl Default for password {
     }
 }
 
+// #[derive(Default)]
+pub struct list{
+    open: bool,
+}
+impl Default for list{
+    fn default() -> list{
+        list{open : true}
+    }
+}
 impl list {
     pub fn show(&mut self, ctx: &CtxRef , data : &Vec<password>){
-        let mut open = true;
+        // let mut open = true;
+        let mut open = self.open;
         Window::new("password list").open(&mut open).show(ctx,|ui| self.ui(ui,data));
     }
     fn ui(&mut self, ui: &mut Ui,data : &Vec<password>) {
