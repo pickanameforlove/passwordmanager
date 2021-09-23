@@ -1,19 +1,19 @@
 use eframe::egui::{containers::*, *};
-use super::list::password;
-use crate::addPassword::insert_password;
-use crate::addPassword::gen_traditional_password;
+use crate::ui::list::Password;
+use crate::add_password::insert_password;
+use crate::add_password::gen_traditional_password;
 // #[derive(Default)]
-pub struct dialog{
-    p:password,
+pub struct Dialog{
+    p:Password,
     open:bool,
 }
-impl Default for dialog {
-    fn default () -> dialog {
-        dialog{p : password{id: 0, description: String::new(), user:String::new(),password:String::new()},
+impl Default for Dialog {
+    fn default () -> Dialog {
+        Dialog{p : Password{id: 0, description: String::new(), user:String::new(),password:String::new()},
                 open : true}
     }
 }
-impl dialog {
+impl Dialog {
     pub fn show(&mut self, ctx: &CtxRef){
         let mut open = self.open;
         // Window::new("adding password").open(&mut open).show(ctx,|ui| self.ui(ui));

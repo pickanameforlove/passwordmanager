@@ -1,19 +1,18 @@
 use eframe::egui::{containers::*, *};
-use eframe::{egui, epi};
-use crate::ui::dialog;
+use eframe::egui;
 use crate::ui::p;
 
 
-pub struct password{
+pub struct Password{
     pub id: i32,
     pub description: String,
     pub user: String,
     pub password: String,
 }
 //如何实现一个空构造方法呀！
-impl Default for password {
-    fn default () -> password {
-        password{id: 0, description: String::new(), user:String::new(),password:String::new()}
+impl Default for Password {
+    fn default () -> Password {
+        Password{id: 0, description: String::new(), user:String::new(),password:String::new()}
     }
 }
 
@@ -27,12 +26,12 @@ impl Default for list{
     }
 }
 impl list {
-    pub fn show(&mut self, ctx: &CtxRef , data : &Vec<password>){
+    pub fn show(&mut self, ctx: &CtxRef , data : &Vec<Password>){
         // let mut open = true;
         let mut open = self.open;
         Window::new("password list").open(&mut open).show(ctx,|ui| self.ui(ui,data));
     }
-    fn ui(&mut self, ui: &mut Ui,data : &Vec<password>) {
+    fn ui(&mut self, ui: &mut Ui,data : &Vec<Password>) {
         Frame::dark_canvas(ui.style()).show(ui,|ui|{
             egui::Grid::new("list").min_col_width(180.0).show(ui, |ui| {
                 ui.label("description");

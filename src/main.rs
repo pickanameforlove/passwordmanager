@@ -2,12 +2,9 @@ use std::io;
 use crossclip::{Clipboard, SystemClipboard};
 use mysql::*;
 use mysql::prelude::*;
-use eframe::{egui, epi};
-use std::sync::{Arc, Mutex};
-mod addPassword;
+mod add_password;
 pub mod ui;
-use ui::list::list;
-use ui::dialog::dialog;
+use ui::list::Password;
 
 fn main(){
     // println!("what do you want to do ? 0 for adding password,1 for showing passwords");
@@ -27,7 +24,8 @@ fn main(){
     // }else{
     //     println!("there is some aspects not thinking in this program!");
     // }
-    let app = ui::MyApp{data : vec![],w1:ui::list::list::default(),w2:ui::dialog::dialog::default()};
+    let mut data_list:Vec<Password> = vec![];
+    let app = ui::MyApp{data : data_list,w1:ui::list::list::default(),w2:ui::dialog::Dialog::default()};
     let native_options = eframe::NativeOptions::default();
     eframe::run_native(Box::new(app), native_options);
 
@@ -65,9 +63,9 @@ fn add_password(){
     };
     
     let pass = if if_num == 1 {
-        addPassword::gen_traditional_password(length)
+        add_password::gen_traditional_password(length)
     }else{
-        addPassword::gen_password(length)
+        add_password::gen_password(length)
     };
 
     println!("the password is {}", pass);

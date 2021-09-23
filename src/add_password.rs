@@ -4,7 +4,7 @@ use std::char;
 use mysql::*;
 use mysql::prelude::*;
 use crossclip::{Clipboard, SystemClipboard};
-use super::ui::list::password;
+use crate::ui::list::Password;
 
 pub fn gen_password(length : u32) -> String{
     let mut password = String::new();
@@ -61,7 +61,7 @@ pub fn gen_traditional_password(length : u32) -> String{
 
 }
 
-pub fn insert_password(p:& mut password){
+pub fn insert_password(p:& mut Password){
     let url = "mysql://root:123456@localhost:3306/passworddb";
     let opts = Opts::from_url(url).expect("mysql initialize Error!");
 
