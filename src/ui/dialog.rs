@@ -2,6 +2,9 @@ use eframe::egui::{containers::*, *};
 use crate::ui::list::Password;
 use crate::add_password::insert_password;
 use crate::add_password::gen_traditional_password;
+use crate::ui::getData;
+
+use super::MyApp;
 // #[derive(Default)]
 pub struct Dialog{
     p:Password,
@@ -14,12 +17,15 @@ impl Default for Dialog {
     }
 }
 impl Dialog {
-    pub fn show(&mut self, ctx: &CtxRef){
-        let mut open = self.open;
-        // Window::new("adding password").open(&mut open).show(ctx,|ui| self.ui(ui));
-        Window::new("adding password").open(&mut open).show(ctx,|ui| self.ui(ui));
+    pub fn show(&mut self, ctx: &CtxRef,data: &mut Vec<Password>,vis:&mut bool){
+        
+        // let  open =ctx.memory().id_data_temp.get_mut_or_default::<bool>(id);
+        // let mut opening = open;
+        Window::new("adding password").open(vis)
+        // .open(ctx.memory().id_data_temp.get_mut_or_default::<bool>(id))
+        .show(ctx,|ui| self.ui(ui,data));
     }
-    fn ui(&mut self, ui: &mut Ui) {
+    fn ui(&mut self, ui: &mut Ui, data: &mut Vec<Password>) {
         let Self{p,open} = self;
         Frame::dark_canvas(ui.style()).show(ui,|ui|{
             ui.horizontal(|ui| {
@@ -40,7 +46,13 @@ impl Dialog {
             if ui.button("submit").clicked(){
                 // println!("d:{},u:{},p:{}",p.description,p.user,p.password);
                 insert_password(p);
-                *open = false;
+                p.description = String::new();
+                p.user = String::new();
+                p.password = String::new();
+                // *open = false;
+                *data = getData();
+                
+                
             }
         });
     }

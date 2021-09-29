@@ -5,7 +5,8 @@ use mysql::prelude::*;
 mod add_password;
 pub mod ui;
 use ui::list::Password;
-
+use eframe::egui::Id;
+use eframe::egui;
 fn main(){
     // println!("what do you want to do ? 0 for adding password,1 for showing passwords");
     // let mut op_num = String::new();
@@ -24,9 +25,20 @@ fn main(){
     // }else{
     //     println!("there is some aspects not thinking in this program!");
     // }
+    let w1_id = Id::new(String::from("list password"));
+    let w2_id = Id::new(String::from("adding password frame"));
+
     let mut data_list:Vec<Password> = vec![];
-    let app = ui::MyApp{data : data_list,w1:ui::list::list::default(),w2:ui::dialog::Dialog::default()};
-    let native_options = eframe::NativeOptions::default();
+    let app = ui::MyApp{
+        data : data_list,
+        w1:ui::list::list::default(),
+        w2:ui::dialog::Dialog::default(),
+        w1_id:w1_id,
+        w2_id:w2_id,
+        w1_vis:true,
+        w2_vis:true};
+    let mut native_options = eframe::NativeOptions::default();
+    native_options.initial_window_size = Some(egui::Vec2::new(1000.0,600.0));
     eframe::run_native(Box::new(app), native_options);
 
 }
